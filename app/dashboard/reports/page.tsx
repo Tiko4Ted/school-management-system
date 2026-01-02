@@ -35,7 +35,7 @@ export default async function ReportsPage() {
     supabase.from("classes").select("*").order("class_level"),
   ])
 
-  const isAdmin = user.role === "administrator"
+  const _isAdmin = user.role === "administrator"
 
   return (
     <div className="space-y-6">

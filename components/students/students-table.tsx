@@ -26,7 +26,7 @@ type Student = {
 
 export function StudentsTable({ students }: { students: Student[] }) {
   const [searchTerm, setSearchTerm] = useState("")
-  const router = useRouter()
+  const _router = useRouter()
 
   const filteredStudents = students.filter(
     (student) =>

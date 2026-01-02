@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = "school-ms-v1"
+const _CACHE_NAME = "school-ms-v1"
 const STATIC_CACHE = "school-ms-static-v1"
 const DYNAMIC_CACHE = "school-ms-dynamic-v1"
 
@@ -129,7 +129,16 @@ async function openMarksSyncDB(): Promise<IDBDatabase> {
   })
 }
 
-async function getPendingMarks(db: IDBDatabase): Promise<any[]> {
+interface PendingMark {
+  id: number
+  student_id: string
+  exam_id: string
+  subject_id: string
+  score: number
+  grade: string
+}
+
+async function getPendingMarks(db: IDBDatabase): Promise<PendingMark[]> {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("pendingMarks", "readonly")
     const store = transaction.objectStore("pendingMarks")

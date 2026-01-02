@@ -9,12 +9,70 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { createClient } from "@/lib/supabase/client"
 import { FileDown } from "lucide-react"
 
-export function StudentReportGenerator({ exams, streams }: { exams: any[]; streams: any[] }) {
+type AcademicYear = {
+  id: string
+  year_name: string
+}
+
+type Exam = {
+  id: string
+  exam_name: string
+  academic_year?: AcademicYear
+}
+
+type Class = {
+  id: string
+  class_name: string
+}
+
+type StreamType = {
+  id: string
+  stream_name: string
+  class?: Class
+}
+
+type Student = {
+  id: string
+  full_name: string
+}
+
+type Subject = {
+  subject_name: string
+}
+
+type Mark = {
+  id: string
+  score: string
+  grade: string
+  subject?: Subject
+}
+
+type StudentDetail = {
+  id: string
+  full_name: string
+  admission_number: string
+  current_stream_id: string
+  current_stream?: {
+    stream_name: string
+    class?: Class
+  }
+}
+
+type ReportData = {
+  student: StudentDetail
+  marks: Mark[]
+  total: number
+  average: number
+  streamRank: number
+  streamSize: number
+}
+
+export function StudentReportGenerator({ exams, streams }: { exams: Exam[]; streams: StreamType[] }) {
   const [examId, setExamId] = useState("")
   const [streamId, setStreamId] = useState("")
   const [studentId, setStudentId] = useState("")
-  const [students, setStudents] = useState<any[]>([])
-  const [reportData, setReportData] = useState<any>(null)
+  const [students, setStudents] = useState<Student[]>([])
+  const [reportData, setReportData] = useState<ReportData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -232,7 +290,7 @@ export function StudentReportGenerator({ exams, streams }: { exams: any[]; strea
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reportData.marks.map((mark: any) => (
+                {reportData.marks.map((mark) => (
                   <TableRow key={mark.id}>
                     <TableCell className="font-medium">{mark.subject?.subject_name}</TableCell>
                     <TableCell>{Number.parseFloat(mark.score).toFixed(2)}</TableCell>

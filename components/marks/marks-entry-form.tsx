@@ -11,6 +11,57 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
+type Subject = {
+  id: string
+  subject_name: string
+}
+
+type Class = {
+  id: string
+  class_name: string
+  class_level: number
+}
+
+type Stream = {
+  id: string
+  stream_name: string
+  class?: Class
+}
+
+type AcademicYear = {
+  id: string
+  year_name: string
+}
+
+type Assignment = {
+  id: string
+  subject_id: string
+  subject: Subject
+  stream: Stream
+  academic_year: AcademicYear
+}
+
+type Exam = {
+  id: string
+  exam_name: string
+  academic_year?: AcademicYear
+}
+
+type Student = {
+  id: string
+  admission_number: string
+  full_name: string
+}
+
+type Mark = {
+  id: string
+  student_id: string
+  exam_id: string
+  subject_id: string
+  score: number
+  grade: string
+}
+
 export function MarksEntryForm({
   assignments,
   exams,
@@ -21,10 +72,10 @@ export function MarksEntryForm({
   selectedSubject,
   selectedStream,
 }: {
-  assignments: any[]
-  exams: any[]
-  students: any[]
-  existingMarks: any[]
+  assignments: Assignment[]
+  exams: Exam[]
+  students: Student[]
+  existingMarks: Mark[]
   teacherId: string
   selectedExam?: string
   selectedSubject?: string

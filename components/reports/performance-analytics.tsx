@@ -7,11 +7,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 
-export function PerformanceAnalytics({ streams }: { streams: any[] }) {
+type Class = {
+  id: string
+  class_name: string
+}
+
+type Stream = {
+  id: string
+  stream_name: string
+  class?: Class
+}
+
+type Student = {
+  id: string
+  full_name: string
+}
+
+type TermResult = {
+  exam: string
+  term: string
+  year: string
+  total: number
+  average: number
+}
+
+type AnalyticsData = {
+  history: unknown[]
+  termResults: TermResult[]
+}
+
+export function PerformanceAnalytics({ streams }: { streams: Stream[] }) {
   const [streamId, setStreamId] = useState("")
   const [studentId, setStudentId] = useState("")
-  const [students, setStudents] = useState<any[]>([])
-  const [analyticsData, setAnalyticsData] = useState<any>(null)
+  const [students, setStudents] = useState<Student[]>([])
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -66,7 +95,11 @@ export function PerformanceAnalytics({ streams }: { streams: any[] }) {
         .eq("student_id", studentId)
 
       // Group marks by exam/term
-      const termResults: any[] = []
+      type ExamGroup = {
+        exam: { exam_name: string; term: string; academic_year?: { year_name: string } }
+        marks: { score: string }[]
+      }
+      const termResults: TermResult[] = []
       const examGroups =
         marks?.reduce(
           (acc, mark) => {
@@ -80,11 +113,11 @@ export function PerformanceAnalytics({ streams }: { streams: any[] }) {
             acc[examId].marks.push(mark)
             return acc
           },
-          {} as Record<string, any>,
+          {} as Record<string, ExamGroup>,
         ) || {}
 
-      Object.values(examGroups).forEach((group: any) => {
-        const total = group.marks.reduce((sum: number, m: any) => sum + Number.parseFloat(m.score), 0)
+      Object.values(examGroups).forEach((group) => {
+        const total = group.marks.reduce((sum: number, m) => sum + Number.parseFloat(m.score), 0)
         termResults.push({
           exam: group.exam.exam_name,
           term: group.exam.term,
@@ -169,7 +202,7 @@ export function PerformanceAnalytics({ streams }: { streams: any[] }) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {analyticsData.termResults.map((result: any, index: number) => (
+                {analyticsData.termResults.map((result, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">

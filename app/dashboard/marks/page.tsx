@@ -54,8 +54,23 @@ export default async function MarksPage({
   const selectedStream = params.stream
 
   // If exam, subject, and stream are selected, fetch students
-  let students: any[] = []
-  let marks: any[] = []
+  type Student = {
+    id: string
+    admission_number: string
+    full_name: string
+    current_stream_id: string
+    is_graduated: boolean
+  }
+  type Mark = {
+    id: string
+    student_id: string
+    exam_id: string
+    subject_id: string
+    score: number
+    grade: string
+  }
+  let students: Student[] = []
+  let marks: Mark[] = []
 
   if (selectedExam && selectedSubject && selectedStream) {
     const { data: studentsData } = await supabase

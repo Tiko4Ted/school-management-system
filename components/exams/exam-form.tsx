@@ -21,11 +21,20 @@ type Subject = {
   subject_name: string
 }
 
+type Exam = {
+  id: string
+  exam_name: string
+  academic_year_id: string
+  term: string
+  status: string
+  subjects?: string[]
+}
+
 export function ExamForm({
   academicYears,
   subjects,
   exam,
-}: { academicYears: AcademicYear[]; subjects: Subject[]; exam?: any }) {
+}: { academicYears: AcademicYear[]; subjects: Subject[]; exam?: Exam }) {
   const [formData, setFormData] = useState({
     exam_name: exam?.exam_name || "",
     academic_year_id: exam?.academic_year_id || "",

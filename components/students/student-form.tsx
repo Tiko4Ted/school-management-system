@@ -20,7 +20,20 @@ type Stream = {
   }
 }
 
-export function StudentForm({ streams, student }: { streams: Stream[]; student?: any }) {
+type Student = {
+  id: string
+  admission_number: string
+  assessment_number: string
+  full_name: string
+  gender: string
+  date_of_birth: string
+  parent_name: string
+  parent_phone: string
+  parent_email: string
+  current_stream_id: string
+}
+
+export function StudentForm({ streams, student }: { streams: Stream[]; student?: Student }) {
   const [formData, setFormData] = useState({
     admission_number: student?.admission_number || "",
     assessment_number: student?.assessment_number || "",

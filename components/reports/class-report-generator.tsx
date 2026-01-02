@@ -8,10 +8,43 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { createClient } from "@/lib/supabase/client"
 import { FileDown } from "lucide-react"
 
-export function ClassReportGenerator({ exams, classes }: { exams: any[]; classes: any[] }) {
+type AcademicYear = {
+  id: string
+  year_name: string
+}
+
+type Exam = {
+  id: string
+  exam_name: string
+  academic_year?: AcademicYear
+}
+
+type Class = {
+  id: string
+  class_name: string
+  class_level: number
+}
+
+type StudentWithRank = {
+  id: string
+  full_name: string
+  gender: string
+  current_stream?: { stream_name: string }
+  total: number
+  rank: number
+}
+
+type ReportData = {
+  all: StudentWithRank[]
+  top10Overall: StudentWithRank[]
+  top10Boys: StudentWithRank[]
+  top10Girls: StudentWithRank[]
+}
+
+export function ClassReportGenerator({ exams, classes }: { exams: Exam[]; classes: Class[] }) {
   const [examId, setExamId] = useState("")
   const [classId, setClassId] = useState("")
-  const [reportData, setReportData] = useState<any>(null)
+  const [reportData, setReportData] = useState<ReportData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -175,7 +208,7 @@ export function ClassReportGenerator({ exams, classes }: { exams: any[]; classes
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {reportData.top10Overall.map((student: any) => (
+                  {reportData.top10Overall.map((student) => (
                     <TableRow key={student.id}>
                       <TableCell className="font-medium">{student.rank}</TableCell>
                       <TableCell>{student.full_name}</TableCell>
@@ -201,7 +234,7 @@ export function ClassReportGenerator({ exams, classes }: { exams: any[]; classes
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reportData.top10Boys.map((student: any) => (
+                    {reportData.top10Boys.map((student) => (
                       <TableRow key={student.id}>
                         <TableCell className="font-medium">{student.rank}</TableCell>
                         <TableCell>{student.full_name}</TableCell>
@@ -225,7 +258,7 @@ export function ClassReportGenerator({ exams, classes }: { exams: any[]; classes
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reportData.top10Girls.map((student: any) => (
+                    {reportData.top10Girls.map((student) => (
                       <TableRow key={student.id}>
                         <TableCell className="font-medium">{student.rank}</TableCell>
                         <TableCell>{student.full_name}</TableCell>

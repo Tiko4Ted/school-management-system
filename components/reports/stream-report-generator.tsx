@@ -8,10 +8,52 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { createClient } from "@/lib/supabase/client"
 import { FileDown } from "lucide-react"
 
-export function StreamReportGenerator({ exams, streams }: { exams: any[]; streams: any[] }) {
+type AcademicYear = {
+  id: string
+  year_name: string
+}
+
+type Exam = {
+  id: string
+  exam_name: string
+  academic_year?: AcademicYear
+}
+
+type Class = {
+  id: string
+  class_name: string
+}
+
+type Stream = {
+  id: string
+  stream_name: string
+  class?: Class
+}
+
+type Subject = {
+  subject_code: string
+  subject_name: string
+}
+
+type StudentWithMarks = {
+  id: string
+  admission_number: string
+  full_name: string
+  total: number
+  average: number
+  rank: number
+  marks: { score: number; subject: Subject }[]
+}
+
+type ReportData = {
+  students: StudentWithMarks[]
+  subjects: Subject[]
+}
+
+export function StreamReportGenerator({ exams, streams }: { exams: Exam[]; streams: Stream[] }) {
   const [examId, setExamId] = useState("")
   const [streamId, setStreamId] = useState("")
-  const [reportData, setReportData] = useState<any>(null)
+  const [reportData, setReportData] = useState<ReportData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -162,7 +204,7 @@ export function StreamReportGenerator({ exams, streams }: { exams: any[]; stream
               </TableRow>
             </TableHeader>
             <TableBody>
-              {reportData.students.map((student: any) => (
+              {reportData.students.map((student) => (
                 <TableRow key={student.id}>
                   <TableCell className="font-medium">{student.rank}</TableCell>
                   <TableCell>{student.admission_number}</TableCell>

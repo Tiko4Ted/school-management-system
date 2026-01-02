@@ -46,7 +46,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Welcome back, {user.full_name}</h2>
-        <p className="text-muted-foreground">Here's an overview of your school management system</p>
+        <p className="text-muted-foreground">Here&apos;s an overview of your school management system</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
